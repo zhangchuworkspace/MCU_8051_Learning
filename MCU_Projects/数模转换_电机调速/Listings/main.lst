@@ -1,0 +1,66 @@
+C51 COMPILER V9.60.7.0   MAIN                                                              05/22/2024 15:51:54 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: E:\Keil_v5\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\main
+                    -.lst) TABS(2) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          #include <REGX52.H>
+   2          #include "TIMER0.H"
+   3          #include "DELAY.H"
+   4          
+   5          sbit DA=P2^1;
+   6          unsigned char Counter,Compare;
+   7          unsigned char i;
+   8          
+   9          void main()
+  10          {
+  11   1        Timer0Init();
+  12   1        while(1)
+  13   1        {
+  14   2          for(i=0;i<100;i++)
+  15   2          {
+  16   3            Compare=i;
+  17   3            Delay(10);
+  18   3          }
+  19   2          for(i=100;i>0;i--)
+  20   2          {
+  21   3            Compare=i;
+  22   3            Delay(10);
+  23   3          }
+  24   2        }
+  25   1      }
+  26          
+  27          //100us加1
+  28          void Timer0_Routine() interrupt 1
+  29          {
+  30   1        TL0 = 0xA4; //设置定时初值
+  31   1        TH0 = 0xFF; //设置定时初值
+  32   1        Counter++;
+  33   1        Counter%=100; //取模运算，100%100=0，给Counter置0
+  34   1        if(Counter<Compare) //低于设定值的部分
+  35   1        {
+  36   2          DA=0;
+  37   2        }
+  38   1        else
+  39   1        {
+  40   2          DA=1;
+  41   2        }
+  42   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     88    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      3    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

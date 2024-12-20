@@ -1,0 +1,69 @@
+C51 COMPILER V9.60.0.0   MAIN                                                              05/03/2024 22:28:06 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: E:\Keil_v5\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\main
+                    -.lst) TABS(2) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          #include <REGX52.H>
+   2          #include <delay.h>
+   3          
+   4          sbit RCK=P3^5;  //RCLK 上升沿锁存
+   5          sbit SCK=P3^6;  //SERCLK 上升沿移位
+   6          sbit SER=P3^4;  //SER 数值入栈
+   7          
+   8          #define MATRIX_LED_PORT P0
+   9          
+  10          void _74HC595_WriteByte(unsigned char Byte){
+  11   1        unsigned char i;
+  12   1        for(i=0;i<8;i++){
+  13   2          SER=Byte&(0x80>>i);
+  14   2          SCK=1;
+  15   2          SCK=0;
+  16   2        }
+  17   1        RCK=1;
+  18   1        RCK=0;
+  19   1      }
+  20          
+  21          void MatrixLED_ShowColumn(unsigned char Column,Data){
+  22   1        _74HC595_WriteByte(Data);
+  23   1        MATRIX_LED_PORT=~(0x80>>Column);
+  24   1        Delay(1);
+  25   1        MATRIX_LED_PORT=0xFF; //位清零
+  26   1      }
+  27          
+  28          void main()
+  29          {
+  30   1        SCK=0;
+  31   1        RCK=0;
+  32   1        while(1)
+  33   1        {
+  34   2          MatrixLED_ShowColumn(0,0x3C);
+  35   2          MatrixLED_ShowColumn(1,0x42);
+  36   2          MatrixLED_ShowColumn(2,0xA9);
+  37   2          MatrixLED_ShowColumn(3,0x85);
+  38   2          MatrixLED_ShowColumn(4,0x85);
+  39   2          MatrixLED_ShowColumn(5,0xA9);
+  40   2          MatrixLED_ShowColumn(6,0x42);
+  41   2          MatrixLED_ShowColumn(7,0x3C);   
+  42   2        }
+  43   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    166    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+C51 COMPILER V9.60.0.0   MAIN                                                              05/03/2024 22:28:06 PAGE 2   
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
